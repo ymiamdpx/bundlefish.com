@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>/// BIO bundlefish ///</title>
+    <style>
+        /* Основные стили */
+        body {
+            background-color: #000000;
+            color: rgb(41, 214, 236);
+            font-family: 'Courier New', monospace;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.4;
+            background-image: 
+                linear-gradient(rgba(0, 30, 0, 0.3) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 30, 0, 0.3) 1px, transparent 1px);
+            background-size: 20px 20px;
+            overflow-x: hidden;
+        }
+
+        /* Эффект курсора */
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        .cursor {
+            animation: blink 1s infinite;
+            color: rgb(3, 241, 241);
+        }
+
+        /* Шапка */
+        header {
+            border-bottom: 1px dashed rgb(45, 235, 225);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            letter-spacing: 5px;
+            text-shadow: 0 0 5px rgb(16, 196, 228);
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            color: rgb(65, 238, 250);
+            font-style: italic;
+            margin-top: 0;
+        }
+
+        /* Разделы форума */
+        .forum-section {
+            border: 1px solid rgb(237, 241, 247);
+            margin-bottom: 15px;
+            background-color: rgba(0, 20, 0, 0.2);
+            overflow: hidden;
+            transition: all 0.5s ease;
+        }
+
+        .section-header {
+            background-color: rgba(0, 30, 0, 0.3);
+            padding: 10px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgb(29, 207, 238);
+        }
+
+        .section-header:hover {
+            background-color: rgba(0, 40, 0, 0.4);
+        }
+
+        .section-title {
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .section-content {
+            padding: 15px;
+            display: none;
+        }
+
+        .section-content.show {
+            display: block;
+            animation: fadeIn 0.8s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Ссылки */
+        .links-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .link-item {
+            background-color: rgba(0, 15, 0, 0.3);
+            padding: 8px;
+            border: 1px dotted rgba(27, 199, 230, 0.986);
+            transition: all 0.3s;
+        }
+
+        .link-item:hover {
+            background-color: rgba(0, 25, 0, 0.5);
+            transform: translateX(5px);
+        }
+
+        .link-item a {
+            color: rgba(27, 199, 230, 0.986);
+            text-decoration: none;
+        }
+
+        .link-item a:hover {
+            text-decoration: underline;
+        }
+
+        
+        /* Подвал */
+        footer {
+            margin-top: 30px;
+            border-top: 1px dashed rgb(11, 162, 250);
+            padding-top: 10px;
+            text-align: center;
+            font-size: 0.8em;
+            color: rgb(12, 219, 247);
+        }
+
+        /* Глитч-эффект */
+        .glitch {
+            position: relative;
+        }
+
+        .glitch::before, .glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.8;
+        }
+
+        .glitch::before {
+            color: rgb(4, 138, 247);
+            z-index: -1;
+            animation: glitch-effect 3s infinite;
+        }
+
+        .glitch::after {
+            color: #0ff;
+            z-index: -2;
+            animation: glitch-effect 2s infinite reverse;
+        }
+
+        @keyframes glitch-effect {
+            0% { transform: translate(0); }
+            20% { transform: translate(-3px, 3px); }
+            40% { transform: translate(-3px, -3px); }
+            60% { transform: translate(3px, 3px); }
+            80% { transform: translate(3px, -3px); }
+            100% { transform: translate(0); }
+        }
+
+        /* Эффект сканирующих линий */
+        .scanlines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                linear-gradient(
+                    rgba(0, 0, 0, 0) 50%, 
+                    rgba(0, 10, 0, 0.2) 50%
+                );
+            background-size: 100% 3px;
+            pointer-events: none;
+            z-index: 1000;
+            mix-blend-mode: overlay;
+        }
+
+        /* Аудиоплеер */
+        .music-player {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            background-color: rgba(0, 20, 0, 0.5);
+            padding: 5px;
+            border: 1px solid rgb(28, 96, 243);
+            font-size: 0.8em;
+        }
+
+        .music-player button {
+            background-color: #111;
+            color: rgb(25, 230, 245);
+            border: 1px solid rgb(43, 212, 241);
+            padding: 3px 8px;
+            cursor: pointer;
+            margin-left: 5px;
+        }
+
+        .music-player button:hover {
+            background-color: rgb(46, 150, 235);
+            color: #000;
+        }
+    </style>
+</head>
+<body>
+    <div class="scanlines"></div>
+    
+    <header>
+        <h1 class="glitch" data-text="bundlefish">bundlefish</h1>
+        <p class="subtitle">[FOUNDED: 2025] [UPDATED: <span id="current-date"></span>] [VISITED: 381]</p>
+    </header>
+
+    <div class="forum-section">
+        <div class="section-header" onclick="toggleSection(this)">
+            <div class="section-title">[+] BASIC INFORMATION</div>
+            <div class="section-status">▼</div>
+        </div>
+        <div class="section-content">
+            <p>>> WELCOME.</p>
+            <p>>> I’M AN ASPIRING FRONTEND DEVELOPER.</p>
+            <p>>> HERE YOU CAN LEARN A BIT ABOUT ME AND CHECK OUT MY WORK.</p>
+            <p class="blink">>> DISCLAIMER: I'M STILL LEARNING IN THIS FIELD, SO THERE'S A CHANCE EVEN THIS PAGE MIGHT BE POORLY MADE..</p>
+        </div>
+    </div>
+
+    <div class="forum-section">
+        <div class="section-header" onclick="toggleSection(this)">
+            <div class="section-title">[+] ABOUT ME</div>
+            <div class="section-status">▼</div>
+        </div>
+        <div class="section-content">
+            <p>>> /\/A\/B/\//O\\U//\T//:</p>
+            <ul>
+                <li>NAME'S: Alex</li>
+                <li>AGE: 19</li>
+                <li>GRIND: Frontend noob</li>
+                
+            </ul>
+            
+        </div>
+    </div>
+
+    <div class="forum-section">
+        <div class="section-header" onclick="toggleSection(this)">
+            <div class="section-title">[+] social links</div>
+            <div class="section-status">▼</div>
+        </div>
+        <div class="section-content">
+            <p>>> SOCIAL:</p>
+<li style="display: flex; align-items: center; gap: 8px;">
+    <img src="icon.png" alt="Discord" width="18">
+    <a href="https://discord.com/users/1360906215458209802" 
+       target="_blank" 
+       style="color: #20c6db; text-decoration: none;">
+       Discord
+    </a>
+</li>
+                
+        </div>
+    </div>
+
+    <div class="forum-section">
+        <div class="section-header" onclick="toggleSection(this)">
+            <div class="section-title">[+] I’M LEARNING</div>
+            <div class="section-status">▼</div>
+        </div>
+        <div class="section-content">
+            <div class="links-container">
+                <div class="link-item">
+                    <a href="#" onclick="return false;">HTML</a><br>
+                    
+                </div>
+                <div class="link-item">
+                    <a href="#" onclick="return false;">CSS</a><br>
+                    
+                </div>
+                <div class="link-item">
+                    <a href="#" onclick="return false;">JS</a><br>
+                </div>
+                <div class="link-item">
+                    <a href="#" onclick="return false;">WebAssembly</a><br>
+                    
+                </div>
+                <div class="link-item">
+                    <a href="#" onclick="return false;">Server Components</a><br>
+                    
+                </div>
+                <div class="link-item">
+                    <a href="#" onclick="return false;">Basic Backend & API</a><br>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <footer>
+           <h3>🐛 Found Bugs?</h3>
+    <p>If you spot any issues, let me know on :</p>
+    <a href="https://discord.com/users/1360906215458209802" target="_blank" style="color: #649aff;">Discord</a>
+   
+    </footer>
+
+    <div class="music-player">
+        <span>Background Music:</span>
+        <button id="play-btn">ON</button>
+        <button id="stop-btn">OFF</button>
+        <audio id="bg-music" loop>
+            <source src="main.mp3" type="audio/mpeg">
+            Your browser doesn't support the HTML5 audio element.
+        </audio>
+    </div>
+
+    <script>
+        // Установка текущей даты
+        const now = new Date();
+        document.getElementById('current-date').textContent = now.toLocaleDateString('ru-RU', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit'
+        }).replace(/\./g, '-');
+
+        // Сворачивание/разворачивание разделов
+        function toggleSection(header) {
+            const content = header.nextElementSibling;
+            const status = header.querySelector('.section-status');
+            
+            if (content.classList.contains('show')) {
+                content.classList.remove('show');
+                status.textContent = '▼';
+            } else {
+                content.classList.add('show');
+                status.textContent = '▲';
+            }
+        }
+
+        // Управление музыкой
+        const music = document.getElementById('bg-music');
+        const playBtn = document.getElementById('play-btn');
+        const stopBtn = document.getElementById('stop-btn');
+
+        playBtn.addEventListener('click', () => {
+            music.play();
+            playBtn.disabled = true;
+            stopBtn.disabled = false;
+        });
+
+        stopBtn.addEventListener('click', () => {
+            music.pause();
+            music.currentTime = 0;
+            playBtn.disabled = false;
+            stopBtn.disabled = true;
+        });
+
+       
+        // Эффект печатной машинки
+        function typeWriter(element, text, speed) {
+            let i = 0;
+            element.innerHTML = '';
+            function typing() {
+                if (i < text.length) {
+                    element.innerHTML += text.charAt(i);
+                    i++;
+                    setTimeout(typing, speed);
+                } else {
+                    element.innerHTML += '<span class="cursor">_</span>';
+                }
+            }
+            typing();
+        }
+
+        // Применяем эффект печати к элементам
+        document.addEventListener('DOMContentLoaded', () => {
+            const subtitles = document.querySelectorAll('.subtitle, .section-content p');
+            subtitles.forEach((el, index) => {
+                setTimeout(() => {
+                    typeWriter(el, el.textContent, Math.random() * 50 + 30);
+                }, index * 500);
+            });
+            
+            // Автовоспроизведение музыки (с задержкой)
+            setTimeout(() => {
+                music.play();
+                playBtn.disabled = true;
+                stopBtn.disabled = false;
+            }, 2000);
+        });
+
+        // Случайные глитч-эффекты
+        setInterval(() => {
+            if (Math.random() > 0.9) {
+                document.body.style.filter = 'hue-rotate(180deg)';
+                setTimeout(() => {
+                    document.body.style.filter = '';
+                }, 100);
+            }
+        }, 10000);
+    </script>
+</body>
+</html>
